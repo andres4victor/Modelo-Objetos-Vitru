@@ -1,395 +1,419 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mapa de Objetos — Uniasselvi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Mapa de Objetos — Vitru</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f7f6f2;
-  --surface: #ffffff;
-  --border: #e2e0db;
-  --text: #28251d;
-  --muted: #7a7974;
-  --faint: #bab9b4;
-  --primary: #01696f;
-  --primary-bg: #e0efee;
-  --blue: #006494;
-  --blue-bg: #ddeaf2;
-  --green: #437a22;
-  --green-bg: #dcebd0;
-  --orange: #964219;
-  --orange-bg: #f0ddd3;
-  --purple: #7a39bb;
-  --purple-bg: #ecdff5;
-  --red: #a13544;
-  --red-bg: #f5dde2;
-  --gold: #b07a00;
-  --gold-bg: #f5eacc;
-  --teal: #1a7a7a;
-  --teal-bg: #d3eded;
-  --gray: #5a5957;
-  --gray-bg: #e8e7e3;
-  --shadow: 0 2px 8px rgba(0,0,0,0.07);
-  --shadow-hover: 0 6px 20px rgba(0,0,0,0.13);
-  --radius: 12px;
+  --bg: #0f1117; --surface: #161b27; --surface2: #1c2333; --border: #2a3347;
+  --text: #e2e8f0; --muted: #8899aa; --faint: #445566;
+  --uni: #3b82f6; --uni-bg: rgba(59,130,246,0.12);
+  --ces: #a855f7; --ces-bg: rgba(168,85,247,0.12);
+  --match: #10b981; --match-bg: rgba(16,185,129,0.10);
+  --gap: #f59e0b; --gap-bg: rgba(245,158,11,0.10);
+  --conflict: #ef4444; --conflict-bg: rgba(239,68,68,0.10);
+  --font-body: 'Satoshi', sans-serif;
+  --font-display: 'Cabinet Grotesk', sans-serif;
+  --radius: 10px; --radius-sm: 6px;
+  --transition: 180ms cubic-bezier(0.16,1,0.3,1);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 32px 20px 60px; }
-
-/* HEADER */
-header { text-align: center; margin-bottom: 36px; }
-header h1 { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-header p { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-
-/* LEGEND */
-.legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 32px; }
-.leg { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; color: var(--muted); background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 3px 10px; }
-.leg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
-/* GRID */
-.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; max-width: 1200px; margin: 0 auto; }
-
-/* CARDS */
-.card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); border-top: 4px solid; transition: box-shadow .2s, transform .2s; overflow: hidden; }
-.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
-
-/* SPAN */
-.span2 { grid-column: span 2; }
-.span4 { grid-column: span 4; }
-
-/* COLORS */
-.c-primary { border-top-color: var(--primary); }
-.c-blue    { border-top-color: var(--blue); }
-.c-green   { border-top-color: var(--green); }
-.c-orange  { border-top-color: var(--orange); }
-.c-purple  { border-top-color: var(--purple); }
-.c-red     { border-top-color: var(--red); }
-.c-gold    { border-top-color: var(--gold); }
-.c-teal    { border-top-color: var(--teal); }
-.c-gray    { border-top-color: var(--gray); }
-
-.card-header { display: flex; align-items: flex-start; gap: 10px; padding: 14px 16px 10px; }
-.icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.card-title { font-size: 0.875rem; font-weight: 700; line-height: 1.2; }
-.card-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
-
-.fields { padding: 0 16px 14px; display: flex; flex-direction: column; gap: 3px; }
-.field { font-size: 0.68rem; color: var(--muted); padding: 3px 7px; background: var(--bg); border-radius: 4px; line-height: 1.4; }
-.field b { color: var(--text); font-weight: 600; }
-.field.key { background: var(--primary-bg); color: var(--primary); font-weight: 600; }
-.field.warn { background: var(--orange-bg); color: var(--orange); font-weight: 600; }
-.field.new  { background: var(--gold-bg); color: var(--gold); font-weight: 600; }
-.field.note { background: var(--purple-bg); color: var(--purple); font-style: italic; }
-
-/* NOVO OBJETO tag */
-.badge-new { display: inline-block; font-size: 0.6rem; font-weight: 700; background: var(--gold-bg); color: var(--gold); border: 1px solid var(--gold); border-radius: 99px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; }
-.badge-warn { display: inline-block; font-size: 0.6rem; font-weight: 700; background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange); border-radius: 99px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
-
-/* SECTION LABEL */
-.section-label { grid-column: span 4; margin-top: 8px; margin-bottom: -4px; }
-.section-label h2 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-
-/* NOTES */
-.notes { max-width: 1200px; margin: 24px auto 0; display: flex; flex-direction: column; gap: 10px; }
-.note { border-radius: 8px; padding: 12px 16px; font-size: 0.78rem; line-height: 1.6; }
-.note.info { background: var(--primary-bg); border-left: 4px solid var(--primary); color: var(--primary); }
-.note.warn { background: var(--orange-bg); border-left: 4px solid var(--orange); color: var(--orange); }
-.note.new  { background: var(--gold-bg); border-left: 4px solid var(--gold); color: var(--gold); }
-
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr 1fr; }
-  .span2, .span4 { grid-column: span 2; }
-  .section-label { grid-column: span 2; }
-}
-@media (max-width: 560px) {
-  .grid { grid-template-columns: 1fr; }
-  .span2, .span4 { grid-column: span 1; }
-  .section-label { grid-column: span 1; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+.header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.logo { font-family: var(--font-display); font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { color: var(--uni); }
+.logo span.v2 { color: var(--ces); }
+.header-meta { font-size: 12px; color: var(--muted); }
+.last-update { font-size: 11px; color: var(--faint); margin-top: 2px; }
+.nav { display: flex; gap: 4px; padding: 16px 32px 0; background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; }
+.nav-btn { padding: 8px 16px; border-radius: var(--radius-sm) var(--radius-sm) 0 0; border: none; background: transparent; color: var(--muted); cursor: pointer; font-family: var(--font-body); font-size: 13px; font-weight: 500; transition: color var(--transition), background var(--transition); white-space: nowrap; border-bottom: 2px solid transparent; }
+.nav-btn:hover { color: var(--text); background: var(--surface2); }
+.nav-btn.active { color: var(--text); border-bottom-color: var(--uni); background: var(--surface2); }
+.legend { display: flex; gap: 16px; padding: 14px 32px; flex-wrap: wrap; background: var(--bg); border-bottom: 1px solid var(--border); }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
+.section { display: none; }
+.section.active { display: block; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+.card-num { font-family: var(--font-display); font-size: 32px; font-weight: 800; line-height: 1; }
+.card-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.card.match .card-num { color: var(--match); }
+.card.gap .card-num { color: var(--gap); }
+.card.conflict .card-num { color: var(--conflict); }
+.card.total .card-num { color: var(--uni); }
+.obj-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; align-items: start; margin-bottom: 40px; }
+.obj-header { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; margin-bottom: 8px; }
+.obj-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; }
+.obj-title.uni { background: var(--uni-bg); color: var(--uni); }
+.obj-title.ces { background: var(--ces-bg); color: var(--ces); }
+.obj-divider { width: 1px; background: var(--border); align-self: stretch; margin: 0 auto; }
+.fields-col { display: flex; flex-direction: column; gap: 3px; }
+.field { padding: 7px 12px; border-radius: var(--radius-sm); font-size: 12px; font-family: 'Courier New', monospace; display: flex; align-items: center; gap: 6px; }
+.field.match { background: var(--match-bg); color: var(--match); border-left: 2px solid var(--match); }
+.field.gap { background: var(--gap-bg); color: var(--gap); border-left: 2px solid var(--gap); }
+.field.conflict { background: var(--conflict-bg); color: var(--conflict); border-left: 2px solid var(--conflict); }
+.field.only { background: var(--surface2); color: var(--muted); border-left: 2px solid var(--border); }
+.field-icon { font-size: 10px; flex-shrink: 0; }
+.connector { display: flex; flex-direction: column; gap: 3px; align-items: center; }
+.conn-line { height: 27.5px; display: flex; align-items: center; justify-content: center; font-size: 9px; width: 40px; }
+.conn-line.match { color: var(--match); }
+.conn-line.gap { color: transparent; }
+.conn-line.conflict { color: var(--conflict); }
+.gap-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+.gap-table th { background: var(--surface2); padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; color: var(--muted); border-bottom: 1px solid var(--border); }
+.gap-table td { padding: 10px 14px; font-size: 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.gap-table tr:last-child td { border-bottom: none; }
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+.badge.crit { background: rgba(239,68,68,0.15); color: #ef4444; }
+.badge.imp { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.badge.ok { background: rgba(16,185,129,0.15); color: #10b981; }
+.section-title { font-family: var(--font-display); font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.section-sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+.brands { display: grid; grid-template-columns: 1fr 40px 1fr; margin-bottom: 8px; }
+.brand-label { font-size: 13px; font-weight: 700; padding: 10px 12px; border-radius: var(--radius-sm); text-align: center; }
+.brand-label.uni { background: var(--uni-bg); color: var(--uni); }
+.brand-label.ces { background: var(--ces-bg); color: var(--ces); }
+@media (max-width: 768px) {
+  .header, .nav, .legend, .main { padding-left: 16px; padding-right: 16px; }
+  .obj-grid, .obj-header, .brands { grid-template-columns: 1fr; }
+  .obj-divider, .connector { display: none; }
+  .cards { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🗺️ Mapa de Objetos — Uniasselvi (SF)</h1>
-  <p>Jornada do aluno pós-matrícula · Análise de relacionamento e lógica entre objetos</p>
+<header class="header">
+  <div class="logo">Vitru <span>Uniasselvi</span> <span style="color:var(--muted)">×</span> <span class="v2">Unicesumar</span></div>
+  <div>
+    <div class="header-meta">Mapa de Objetos — Modelo Unificado</div>
+    <div class="last-update">Atualizado em maio/2026 · v2.1</div>
+  </div>
 </header>
 
+<nav class="nav">
+  <button class="nav-btn active" onclick="show('overview',this)">Visão Geral</button>
+  <button class="nav-btn" onclick="show('matricula',this)">Matrícula</button>
+  <button class="nav-btn" onclick="show('financeiro',this)">Financeiro</button>
+  <button class="nav-btn" onclick="show('provas',this)">Provas</button>
+  <button class="nav-btn" onclick="show('academico',this)">Acadêmico</button>
+  <button class="nav-btn" onclick="show('atendimento',this)">Atendimento</button>
+  <button class="nav-btn" onclick="show('gaps',this)">⚠ Gaps & Decisões</button>
+</nav>
+
 <div class="legend">
-  <div class="leg"><div class="leg-dot" style="background:var(--primary)"></div>Matrícula (raiz)</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--blue)"></div>Curso / Edital / Turma</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--green)"></div>Grade / Disciplina / Presença</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--orange)"></div>Provas / Aulas Práticas</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--teal)"></div>Estágio</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--purple)"></div>Financeiro</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--gold)"></div>Rematrícula (novo objeto)</div>
-  <div class="leg"><div class="leg-dot" style="background:var(--gray)"></div>Polo</div>
+  <div class="legend-item"><div class="dot" style="background:var(--match)"></div>Equivalência direta</div>
+  <div class="legend-item"><div class="dot" style="background:var(--gap)"></div>Gap (falta em uma marca)</div>
+  <div class="legend-item"><div class="dot" style="background:var(--conflict)"></div>Conflito (mesma semântica, valores diferentes)</div>
+  <div class="legend-item"><div class="dot" style="background:var(--faint)"></div>Exclusivo da marca</div>
 </div>
 
-<div class="grid">
+<main class="main">
 
-  <!-- CAMADA 1: RAIZ -->
-  <div class="section-label"><h2>🔵 Camada 1 — Objeto Raiz</h2></div>
+<!-- OVERVIEW -->
+<section id="overview" class="section active">
+  <div class="section-title">Mapeamento Geral</div>
+  <div class="section-sub">Status consolidado de todos os objetos analisados nas duas marcas</div>
+  <div class="cards">
+    <div class="card total"><div class="card-num">9</div><div class="card-label">Objetos mapeados</div></div>
+    <div class="card match"><div class="card-num">5</div><div class="card-label">Com equivalência clara</div></div>
+    <div class="card gap"><div class="card-num">3</div><div class="card-label">Com gaps críticos</div></div>
+    <div class="card conflict"><div class="card-num">4</div><div class="card-label">Conflitos de dados</div></div>
+  </div>
+  <table class="gap-table">
+    <thead><tr><th>Objeto</th><th>Uniasselvi (SF)</th><th>Unicesumar</th><th>Status</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td><b>Matrícula</b></td><td>✅ 90+ campos</td><td>✅ 30+ campos</td><td><span class="badge imp">Parcial</span></td><td>Rematrícula c/ Edital vs sem Edital</td></tr>
+      <tr><td><b>Financeiro / Boletos</b></td><td>✅ 20+ campos (SF)</td><td>✅ Boletos + Payments</td><td><span class="badge imp">Parcial</span></td><td>Type Payment diverge (Arrasto, Arrasto-Boleto)</td></tr>
+      <tr><td><b>Provas</b></td><td>✅ 1 objeto unificado</td><td>⚠️ 3 sub-objetos</td><td><span class="badge imp">Parcial</span></td><td>Unicesumar separa Presencial / Substitutiva / Online</td></tr>
+      <tr><td><b>Grade Curricular</b></td><td>✅ Disciplina + Edital</td><td>✅ Year + Period</td><td><span class="badge imp">Parcial</span></td><td>Sem Edital na Unicesumar — usar Year+Period como chave</td></tr>
+      <tr><td><b>Histórico Acadêmico</b></td><td>❌ Não mapeado</td><td>✅ Grades + Histórico</td><td><span class="badge crit">Gap</span></td><td>Uniasselvi precisa levantar esse objeto</td></tr>
+      <tr><td><b>Polo</b></td><td>✅ Lookup</td><td>✅ Nome, UF, Status, País</td><td><span class="badge ok">Alinhado</span></td><td>Estrutura equivalente</td></tr>
+      <tr><td><b>Atendimento</b></td><td>✅ SF Cases</td><td>✅ Sydle (rico)</td><td><span class="badge imp">Parcial</span></td><td>Unicesumar tem mais detalhe no protocolo</td></tr>
+      <tr><td><b>Estágio</b></td><td>✅ Objeto dedicado (35+ campos)</td><td>⚠️ Tipo de Atividade</td><td><span class="badge crit">Estrutural</span></td><td>Unicesumar trata estágio como tipo — sem objeto próprio</td></tr>
+      <tr><td><b>Bolsas</b></td><td>⚠️ Só flags na matrícula</td><td>⚠️ "Levar para financeiro"</td><td><span class="badge crit">Gap</span></td><td>Nenhuma marca tem campos detalhados de bolsa</td></tr>
+    </tbody>
+  </table>
+</section>
 
-  <div class="card c-primary span4">
-    <div class="card-header">
-      <div class="icon" style="background:var(--primary-bg)">🎓</div>
-      <div>
-        <div class="card-title">Matrícula (Aluno) — Objeto Central</div>
-        <div class="card-sub">Todos os outros objetos se relacionam a partir daqui · Lookup: Matrícula__c</div>
-      </div>
+<!-- MATRÍCULA -->
+<section id="matricula" class="section">
+  <div class="section-title">Matrícula</div>
+  <div class="section-sub">Correspondência de campos entre as duas marcas</div>
+  <div class="brands"><div class="brand-label uni">🔵 Uniasselvi (Salesforce)</div><div></div><div class="brand-label ces">🟣 Unicesumar</div></div>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>CodigoMatricula__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataMatricula__c</div>
+      <div class="field match"><span class="field-icon">≡</span>data_ingresso__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Status__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Modalidade__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Celular__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Polo__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Curso__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataCancelamento__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAceiteContrato__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataPreenchidaColacaoGrau__c</div>
+      <div class="field match"><span class="field-icon">≡</span>PercentualConclusaoCurso__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Motivo_Solicitacao_Cancelamento__c</div>
+      <div class="field gap"><span class="field-icon">△</span>Edital__c</div>
+      <div class="field gap"><span class="field-icon">△</span>DataInicioRA__c</div>
+      <div class="field gap"><span class="field-icon">△</span>DataFimRA__c</div>
+      <div class="field gap"><span class="field-icon">△</span>Tipo_Rematricula__c</div>
+      <div class="field gap"><span class="field-icon">△</span>StatusRenovado__c</div>
+      <div class="field gap"><span class="field-icon">△</span>RespostaRematriculaAntecipada__c</div>
+      <div class="field gap"><span class="field-icon">△</span>ScoreDeCredito__c</div>
+      <div class="field gap"><span class="field-icon">△</span>PerfilDeCredito__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Turma__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Edital__c (ciclo)</div>
+      <div class="field only"><span class="field-icon">◆</span>Recorrencia__c</div>
     </div>
-    <div class="fields" style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px">
-      <div class="field key">Matrícula__c · CodigoMatricula__c · Name</div>
-      <div class="field key">Pessoa__c (nome do aluno) · NomeFormando__c</div>
-      <div class="field key">Celular__c · Email (via Pessoa)</div>
-      <div class="field"><b>Status:</b> Status__c · SituacaoAlunoSemestre__c · StatusSemestre__c</div>
-      <div class="field"><b>Tipo aluno:</b> TipoAluno__c · TipoAlunoSemestre__c <span style="color:var(--primary);font-weight:600">[Calouro·Veterano·Winback]</span></div>
-      <div class="field"><b>Ingresso:</b> data_ingresso__c · DataMatricula__c · FormaIngressoAtual__c</div>
-      <div class="field"><b>Curso:</b> Curso__c · CursoForm__c · Modalidade__c · Oferta__c · TipoOferta__c</div>
-      <div class="field"><b>Polo:</b> Polo__c · CodigoDoPolo__c · ConcatenacaoPoloCodigoDoPolo__c · PoloAtivo__c</div>
-      <div class="field"><b>Turma:</b> Turma__c · ModuloDaTurma__c · TurnoAcademico__c · DiaSemana__c</div>
-      <div class="field"><b>Cancelamento:</b> Data_de_Solicitacao_de_Cancelamento__c · DataCancelamento__c · Motivo · Situacao_Cancelamento__c · Status_Cancelamento__c</div>
-      <div class="field"><b>Acadêmico:</b> PercentualConclusaoCurso__c · QtdDisciplinas__c · QuantidadeDisciplinasPendente__c · Quantidade_de_Semestres__c · ModuloSemestreCorrente__c</div>
-      <div class="field"><b>Extensão/Compl:</b> atividades_extensao__c · HoraComplementarPendente__c · horas_complementares__c</div>
-      <div class="field"><b>Contrato:</b> DataAceiteContrato__c · DataPrimeiroEncontro__c · Feirao__c · OrigemMatricula__c</div>
-      <div class="field"><b>Financeiro (ponteiro):</b> Data_baixa_primeiro_boleto__c · Data_venc_primeiro_boleto__c · Data_Cadastro_Cartao__c · AproveitamentoFinanceiro__c · ScoreDeCredito__c · PerfilDeCredito__c · Possui_bolsa_de_estudos__c</div>
-      <div class="field"><b>Formação:</b> StatusFormando__c · DataExpDiploma__c · tipo_certificado__c · possui_formacao__c · NaoRenovados__c</div>
-      <div class="field"><b>Jornadas:</b> Jornada_Retencao_Auxiliar__c · Jornada_Retencao_Nutricao_Mkt_Cloud__c · PoliticaRetencao__c · Engajamento__c</div>
-      <div class="field"><b>Outros:</b> Marca__c · Sede__c · Parceiro__c · Edital__c · EditalOrigem__c · Parametrizacao__c · AreaDeConhecimentoCurso__c · DisciplinaIsolada__c · AproveitamentoAcademico__c</div>
-      <div class="field warn">⚠️ Movido de MATRICULA: Setor__c · MacroMotivo__c → pertence ao objeto Atendimento/Protocolo</div>
-      <div class="field warn">⚠️ Movido de MATRICULA: DocumentosPendentes__c → pertence ao objeto Documentação</div>
+    <div class="connector">
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div>
+      <div class="conn-line gap">–</div><div class="conn-line gap">–</div><div class="conn-line gap">–</div>
+      <div class="conn-line gap">–</div><div class="conn-line gap">–</div><div class="conn-line gap">–</div>
+      <div class="conn-line gap">–</div><div class="conn-line gap">–</div>
+    </div>
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>Situação da Matrícula</div>
+      <div class="field match"><span class="field-icon">≡</span>Date of Admission</div>
+      <div class="field match"><span class="field-icon">≡</span>Módulo-Ano de Ingresso</div>
+      <div class="field match"><span class="field-icon">≡</span>Situation</div>
+      <div class="field match"><span class="field-icon">≡</span>Modalidade (no Curso)</div>
+      <div class="field match"><span class="field-icon">≡</span>Celular</div>
+      <div class="field match"><span class="field-icon">≡</span>Polo</div>
+      <div class="field match"><span class="field-icon">≡</span>Program (Curso)</div>
+      <div class="field match"><span class="field-icon">≡</span>Data encerramento</div>
+      <div class="field match"><span class="field-icon">≡</span>Aceite de Contrato</div>
+      <div class="field match"><span class="field-icon">≡</span>Data Colação de Grau</div>
+      <div class="field match"><span class="field-icon">≡</span>Percentual Conclusão Curso</div>
+      <div class="field match"><span class="field-icon">≡</span>Motivo de Cancelamento (Sydle)</div>
+      <div class="field gap"><span class="field-icon">?</span><i>Sem ciclo Edital</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Sem janela de rematrícula</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Sem janela de rematrícula</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Reabertura Realizada (parcial)</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Sem campo de status explícito</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Sem campo de resposta explícito</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>STATUS ADIMPLÊNCIA (Sydle)</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>QTD DÉBITOS INADIMPLENTE (Sydle)</i></div>
+      <div class="field only"><span class="field-icon">◆</span>Série atual</div>
+      <div class="field only"><span class="field-icon">◆</span>Qt. Dias último acesso AVA</div>
+      <div class="field only"><span class="field-icon">◆</span>Presença na Ambientação</div>
     </div>
   </div>
+</section>
 
-  <!-- CAMADA 2: ESTRUTURA ACADÊMICA -->
-  <div class="section-label"><h2>🟢 Camada 2 — Estrutura Acadêmica (ligados à Matrícula)</h2></div>
-
-  <div class="card c-blue span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--blue-bg)">🏫</div>
-      <div>
-        <div class="card-title">Edital</div>
-        <div class="card-sub">Ciclo de rematrícula · Liga ao semestre letivo</div>
-      </div>
+<!-- FINANCEIRO -->
+<section id="financeiro" class="section">
+  <div class="section-title">Financeiro</div>
+  <div class="section-sub">Boletos, pagamentos e recorrência</div>
+  <div class="brands"><div class="brand-label uni">🔵 Uniasselvi — Títulos (SF)</div><div></div><div class="brand-label ces">🟣 Unicesumar — Boletos + Payments</div></div>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>NossoNumero__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataVencimento__c</div>
+      <div class="field match"><span class="field-icon">≡</span>ValorPago__c</div>
+      <div class="field match"><span class="field-icon">≡</span>ParcelaSemestre__c</div>
+      <div class="field match"><span class="field-icon">≡</span>TipoTitulo__c</div>
+      <div class="field match"><span class="field-icon">≡</span>StatusTitulo__c</div>
+      <div class="field conflict"><span class="field-icon">!</span>TipoPagamento__c</div>
+      <div class="field gap"><span class="field-icon">△</span>DataPagamento__c</div>
+      <div class="field gap"><span class="field-icon">△</span>Recorrencia__c</div>
+      <div class="field gap"><span class="field-icon">△</span>StatusCartaoRecorrencia__c</div>
+      <div class="field gap"><span class="field-icon">△</span>MotivoFalha__c</div>
+      <div class="field gap"><span class="field-icon">△</span>NumeroTentativas__c</div>
+      <div class="field gap"><span class="field-icon">△</span>DataFalha__c</div>
+      <div class="field only"><span class="field-icon">◆</span>LinhaDigitavel__c</div>
+      <div class="field only"><span class="field-icon">◆</span>TransacaoOrigem__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Semestre__c</div>
+      <div class="field only"><span class="field-icon">◆</span>ParcelaGeral__c</div>
     </div>
-    <div class="fields">
-      <div class="field key">CodigoEdital__c · Name · IdExterno__c</div>
-      <div class="field"><b>Período:</b> InscricaoDataInicio/Fim · MatriculaDataInicio/Fim</div>
-      <div class="field"><b>Tipo:</b> Tipo__c · Status__c · Descricao__c</div>
-      <div class="field"><b>Marca:</b> Marca__c · Edital_Anterior__c</div>
-      <div class="field note">💡 Matrícula referencia Edital__c e EditalOrigem__c — cada semestre tem um edital</div>
+    <div class="connector">
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line conflict" style="color:var(--conflict)">≠</div>
+      <div class="conn-line gap">–</div><div class="conn-line gap">–</div><div class="conn-line gap">–</div>
+      <div class="conn-line gap">–</div><div class="conn-line gap">–</div><div class="conn-line gap">–</div>
+    </div>
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>Boleto (ID)</div>
+      <div class="field match"><span class="field-icon">≡</span>Expire Date</div>
+      <div class="field match"><span class="field-icon">≡</span>Amount to Pay</div>
+      <div class="field match"><span class="field-icon">≡</span>Month</div>
+      <div class="field match"><span class="field-icon">≡</span>Type (Mensalidade, Acordo...)</div>
+      <div class="field match"><span class="field-icon">≡</span><i>Implícito via Removed</i></div>
+      <div class="field conflict"><span class="field-icon">!</span>Type Payment (+Arrasto, Arrasto-Boleto)</div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field gap"><span class="field-icon">?</span><i>Não mapeado</i></div>
+      <div class="field only"><span class="field-icon">◆</span>Link Pix</div>
+      <div class="field only"><span class="field-icon">◆</span>Pending Amount</div>
+      <div class="field only"><span class="field-icon">◆</span>Number of Days Expired</div>
+      <div class="field only"><span class="field-icon">◆</span>Year</div>
     </div>
   </div>
+</section>
 
-  <div class="card c-blue span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--blue-bg)">👥</div>
-      <div>
-        <div class="card-title">Turma</div>
-        <div class="card-sub">Agrupamento de alunos · Liga a Matrícula e Polo</div>
-      </div>
+<!-- PROVAS -->
+<section id="provas" class="section">
+  <div class="section-title">Provas & Avaliações</div>
+  <div class="section-sub">Uniasselvi: 1 objeto unificado · Unicesumar: 3 sub-objetos por tipo</div>
+  <div class="brands"><div class="brand-label uni">🔵 Uniasselvi — Provas (SF)</div><div></div><div class="brand-label ces">🟣 Unicesumar — Provas / Substitutivas / Online</div></div>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>IDAvaliacao__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAgendada__c</div>
+      <div class="field match"><span class="field-icon">≡</span>NotaAtividade__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAtividadeInicio__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAtividadeFim__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAgendamentoInicioN__c</div>
+      <div class="field match"><span class="field-icon">≡</span>DataAgendamentoFimN__c</div>
+      <div class="field conflict"><span class="field-icon">!</span>TipoAtividade__c / FormaRealizacao__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Peso__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Ordem__c</div>
+      <div class="field only"><span class="field-icon">◆</span>DataInicioSolicitacao2Op__c</div>
+      <div class="field only"><span class="field-icon">◆</span>AvaliacaoAtividade__c</div>
+      <div class="field only"><span class="field-icon">◆</span>CodigoDisciplina__c</div>
     </div>
-    <div class="fields">
-      <div class="field key">Codigo__c · Name · Codigo_Curso_Turma__c</div>
-      <div class="field"><b>Polo:</b> Codigo_do_Polo__c</div>
-      <div class="field"><b>Período:</b> Modulo_da_Turma__c · Turma_Periodo__c · Turno__c</div>
-      <div class="field"><b>Tipo:</b> Tipo_da_turma__c · Turma_Agrupada__c</div>
-      <div class="field"><b>Tutor:</b> Tutor__c · TurmaComTutor__c</div>
-      <div class="field note">💡 Turma não existe na Unicesumar — é um objeto exclusivo da Uniasselvi (SF). Será necessário criar equivalência no modelo unificado.</div>
+    <div class="connector">
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div>
+      <div class="conn-line conflict" style="color:var(--conflict)">≠</div>
+    </div>
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>Código</div>
+      <div class="field match"><span class="field-icon">≡</span>Data Agendamento</div>
+      <div class="field match"><span class="field-icon">≡</span>Nota</div>
+      <div class="field match"><span class="field-icon">≡</span>Data início janela Realização</div>
+      <div class="field match"><span class="field-icon">≡</span>Data fim janela Realização</div>
+      <div class="field match"><span class="field-icon">≡</span>Data início janela Agendamento</div>
+      <div class="field match"><span class="field-icon">≡</span>Data fim janela Agendamento</div>
+      <div class="field conflict"><span class="field-icon">!</span>Modelo (3 sub-objetos separados)</div>
+      <div class="field only"><span class="field-icon">◆</span>Matriz Curricular</div>
+      <div class="field only"><span class="field-icon">◆</span>Status</div>
+      <div class="field only"><span class="field-icon">◆</span>Tipo (1ª e 2ª oportunidade)</div>
     </div>
   </div>
+</section>
 
-  <div class="card c-green span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--green-bg)">📋</div>
-      <div>
-        <div class="card-title">Disciplina <span class="badge-warn">⚠️ reposicionado</span></div>
-        <div class="card-sub">Estava em grupo próprio — é Grade Curricular da Uniasselvi</div>
-      </div>
+<!-- ACADÊMICO -->
+<section id="academico" class="section">
+  <div class="section-title">Acadêmico</div>
+  <div class="section-sub">Grade Curricular, Histórico e Atividades</div>
+  <div class="brands"><div class="brand-label uni">🔵 Uniasselvi</div><div></div><div class="brand-label ces">🟣 Unicesumar</div></div>
+  <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;margin-top:4px;">Grade Curricular / Disciplinas</p>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>Codigo_Disciplina__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Name</div>
+      <div class="field match"><span class="field-icon">≡</span>Tipo_disciplina__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Matricula__c</div>
+      <div class="field gap"><span class="field-icon">△</span>Edital__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Data_inicio_estagio__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Situacao_estagio__c</div>
     </div>
-    <div class="fields">
-      <div class="field key">Codigo_Disciplina__c · Name · Matricula__c</div>
-      <div class="field"><b>Tipo:</b> Tipo_disciplina__c · Edital__c</div>
-      <div class="field"><b>Estágio na disciplina:</b> Data_inicio/fim_estagio__c · Situacao_estagio__c · Situacao_termo_estagio__c</div>
-      <div class="field warn">⚠️ Campos de horas (cumpridas, faltantes, totais) marcados como "Não Levar" pelo usuário</div>
-      <div class="field note">💡 Equivale a "Grade Curricular / Disciplinas matriculadas" da Unicesumar. Chave de cruzamento: Codigo_Disciplina__c ↔ Subject Name</div>
+    <div class="connector">
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line gap">–</div>
+    </div>
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>Código (Subject)</div>
+      <div class="field match"><span class="field-icon">≡</span>Subject Name</div>
+      <div class="field match"><span class="field-icon">≡</span>Tipo (Curricular, DP, Adaptação)</div>
+      <div class="field match"><span class="field-icon">≡</span>Matrícula (lookup)</div>
+      <div class="field gap"><span class="field-icon">?</span>Year + Period (substitui Edital)</div>
+      <div class="field only"><span class="field-icon">◆</span>Metodologia (Semi30/40)</div>
+      <div class="field only"><span class="field-icon">◆</span>Aproveitamento de Estudo?</div>
+      <div class="field only"><span class="field-icon">◆</span>Media</div>
     </div>
   </div>
-
-  <div class="card c-green span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--green-bg)">✅</div>
-      <div>
-        <div class="card-title">Presença <span class="badge-new">Novo objeto</span></div>
-        <div class="card-sub">Não existe na Unicesumar — exclusivo Uniasselvi</div>
-      </div>
+  <p style="font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;margin-top:20px;">Histórico Acadêmico</p>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field gap"><span class="field-icon">△</span><i>Objeto não mapeado na Uniasselvi</i></div>
     </div>
-    <div class="fields">
-      <div class="field key">IDCheckinAluno__c · Matricula__c · Turma__c</div>
-      <div class="field"><b>Encontro:</b> Encontro__c · DataEncontro__c · CodigoDisciplina__c · OrdemDisciplina__c</div>
-      <div class="field"><b>Check-in:</b> CheckinAluno__c · TipoCheckin__c · CheckinPresenca__c</div>
-      <div class="field"><b>Check-out:</b> CheckoutAluno__c · TipoCheckout__c · CheckoutPresenca__c</div>
-      <div class="field"><b>Mediador:</b> NomeMediador__c · DataPrimeiroEventoAgenda__c</div>
-      <div class="field note">💡 Objeto completamente novo — controla frequência/presença nos encontros presenciais. Não tem par na Unicesumar.</div>
+    <div class="connector"><div class="conn-line gap">–</div></div>
+    <div class="fields-col">
+      <div class="field only"><span class="field-icon">◆</span>Subject Name + Year + Period + Concept</div>
+      <div class="field only"><span class="field-icon">◆</span>Final Grade (histórico)</div>
     </div>
   </div>
+</section>
 
-  <!-- CAMADA 3: AVALIAÇÃO E PRÁTICA -->
-  <div class="section-label"><h2>🟠 Camada 3 — Avaliação e Atividade Prática</h2></div>
-
-  <div class="card c-orange span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--orange-bg)">📝</div>
-      <div>
-        <div class="card-title">Provas (Avaliações)</div>
-        <div class="card-sub">Mesmo objeto da Unicesumar · Diferenciado por FormaRealizacao__c</div>
-      </div>
+<!-- ATENDIMENTO -->
+<section id="atendimento" class="section">
+  <div class="section-title">Atendimento</div>
+  <div class="section-sub">Uniasselvi usa SF Cases · Unicesumar usa Sydle (mais detalhado)</div>
+  <div class="brands"><div class="brand-label uni">🔵 Uniasselvi — SF Cases</div><div></div><div class="brand-label ces">🟣 Unicesumar — Sydle</div></div>
+  <div class="obj-grid">
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>MacroMotivo__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Setor__c</div>
+      <div class="field match"><span class="field-icon">≡</span>Situacao_Cancelamento__c</div>
+      <div class="field match"><span class="field-icon">≡</span>PoliticaRetencao__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Jornada_Retencao_Auxiliar__c</div>
+      <div class="field only"><span class="field-icon">◆</span>Jornada_Retencao_Nutricao_Mkt_Cloud__c</div>
     </div>
-    <div class="fields">
-      <div class="field key">IDAvaliacao__c · Matricula__c · AvaliacaoAtividade__c</div>
-      <div class="field key">FormaRealizacao__c <span style="color:var(--orange)">[Presencial · Online]</span> ← equivale ao "Modelo" da Unicesumar</div>
-      <div class="field"><b>Disciplina:</b> CodigoDisciplina__c · DescricaoDisciplina__c · OrdemDisciplina__c</div>
-      <div class="field"><b>Tipo:</b> TipoAtividade__c · NumeroAvaliacao__c · Ordem__c · Peso__c</div>
-      <div class="field"><b>Janelas:</b> DataAgendamentoInicioN/Fim · DataAtividadeInicio/Fim · DataFimSolicitacao2Op</div>
-      <div class="field"><b>Agendamento:</b> DataAgendada__c · DataAgendamento__c · AgendamentoAutomatico__c · FormaCadastro__c</div>
-      <div class="field"><b>Realização:</b> DataRealizacaoAvaliacao__c · FormaEntrega__c · Sala__c · PoloAvaliacaoOnline__c</div>
-      <div class="field"><b>Nota:</b> NotaAtividade__c · DataLancamentoNota__c · NomeAtividade__c</div>
-      <div class="field"><b>Status:</b> Cancelamento__c · DataCancelamento__c · StatusDocumentoRepositorio__c</div>
-      <div class="field"><b>Outros:</b> Semestre__c · ModalidadeAluno__c · Celula__c · AASEAvaliacao__c</div>
-      <div class="field note">💡 Muito mais granular que a Unicesumar. Tem peso, ordem, janela de 2ª oportunidade e agendamento noturno separados.</div>
+    <div class="connector">
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
+      <div class="conn-line match">⟷</div><div class="conn-line match">⟷</div>
     </div>
-  </div>
-
-  <div class="card c-orange span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--orange-bg)">🔬</div>
-      <div>
-        <div class="card-title">Aulas Práticas <span class="badge-new">Novo objeto</span></div>
-        <div class="card-sub">Não existe na Unicesumar · Específico EAD com laboratório</div>
-      </div>
-    </div>
-    <div class="fields">
-      <div class="field key">IDAlunAulaPratica__c · Matricula__c · Turma__c</div>
-      <div class="field"><b>Polo:</b> Polo__c · CodigoPoloHub__c · CodigoPoloAluno__c · GrupoHub__c</div>
-      <div class="field"><b>Disciplina:</b> CodigoDisciplina__c · OrdemDisciplina__c · TemPratica__c</div>
-      <div class="field"><b>Agenda:</b> InicioPratica__c · FimPratica__c · DiaSemana__c · Turno__c · Horario__c</div>
-      <div class="field"><b>Semestre:</b> Semestre__c · TipoTurma__c · Agrupamento__c</div>
-      <div class="field"><b>Professor:</b> ProfessorRegente__c · ProfessorMediador__c · PossuiLabMontado__c</div>
-      <div class="field note">💡 Controla as aulas presenciais de laboratório. Liga à Matrícula, Disciplina, Turma e Polo — objeto de cruzamento central.</div>
+    <div class="fields-col">
+      <div class="field match"><span class="field-icon">≡</span>ÁREA QUE ATENDEU</div>
+      <div class="field match"><span class="field-icon">≡</span>RESULTADO</div>
+      <div class="field match"><span class="field-icon">≡</span>MOTIVO DE CANCELAMENTO</div>
+      <div class="field match"><span class="field-icon">≡</span>POLITICA APLICADA</div>
+      <div class="field only"><span class="field-icon">◆</span>N° PROTOCOLO</div>
+      <div class="field only"><span class="field-icon">◆</span>STATUS ADIMPLÊNCIA</div>
+      <div class="field only"><span class="field-icon">◆</span>QTD DE DÉBITOS INADIMPLENTE</div>
+      <div class="field only"><span class="field-icon">◆</span>ACEITOU POLÍTICA?</div>
+      <div class="field only"><span class="field-icon">◆</span>DOC. SEGUNDA LICENCIATURA?</div>
     </div>
   </div>
+</section>
 
-  <!-- CAMADA 4: ESTÁGIO E FINANCEIRO -->
-  <div class="section-label"><h2>🔷 Camada 4 — Estágio e Financeiro</h2></div>
+<!-- GAPS -->
+<section id="gaps" class="section">
+  <div class="section-title">Gaps & Decisões Pendentes</div>
+  <div class="section-sub">Pontos que precisam de decisão antes de fechar o modelo unificado</div>
+  <table class="gap-table">
+    <thead><tr><th>Prioridade</th><th>Objeto</th><th>Gap / Conflito</th><th>Impacto</th><th>Ação necessária</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge crit">🔴 Crítico</span></td><td>Financeiro</td><td>Type Payment: Unicesumar tem "Arrasto" e "Arrasto-Boleto" sem equivalente</td><td>Régua de comunicação errada por forma de pagamento</td><td>Criar tabela de-para por marca</td></tr>
+      <tr><td><span class="badge crit">🔴 Crítico</span></td><td>Bolsas</td><td>Nenhuma das duas marcas tem campos detalhados de bolsas</td><td>Não é possível segmentar alunos bolsistas</td><td>Levantar campos nas duas marcas</td></tr>
+      <tr><td><span class="badge crit">🔴 Crítico</span></td><td>Histórico Acadêmico</td><td>Uniasselvi não tem o objeto mapeado</td><td>Impossível unificar boletim/histórico</td><td>Uniasselvi levantar equivalente ao Grades</td></tr>
+      <tr><td><span class="badge imp">🟡 Importante</span></td><td>Rematrícula</td><td>Uniasselvi usa Edital; Unicesumar usa Reabertura</td><td>Fluxo de rematrícula não unificável sem decisão</td><td>Definir modelo: Edital ou Reabertura</td></tr>
+      <tr><td><span class="badge imp">🟡 Importante</span></td><td>Provas</td><td>Unicesumar tem 3 sub-objetos; Uniasselvi unifica em 1</td><td>Relatórios de avaliação inconsistentes</td><td>Decidir: 1 objeto com campo Tipo ou manter 3</td></tr>
+      <tr><td><span class="badge imp">🟡 Importante</span></td><td>Estágio</td><td>Uniasselvi tem 35+ campos; Unicesumar é tipo de Atividade</td><td>Dados ricos de estágio sem equivalente</td><td>Unicesumar criar objeto ou mapear em Atividade</td></tr>
+      <tr><td><span class="badge imp">🟡 Importante</span></td><td>Financeiro</td><td>Unicesumar sem DataPagamento; Uniasselvi sem Link Pix e Days Expired</td><td>Réguas de inadimplência e PIX incompletas</td><td>Acrescentar campos no modelo unificado</td></tr>
+      <tr><td><span class="badge ok">🟢 Observação</span></td><td>Payments</td><td>Payments é filho de Boletos (1:1) ou independente (1:N)?</td><td>Define se boleto pode ter múltiplos pagamentos</td><td>Confirmar cardinalidade com time Unicesumar</td></tr>
+    </tbody>
+  </table>
+</section>
 
-  <div class="card c-teal span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--teal-bg)">🏢</div>
-      <div>
-        <div class="card-title">Estágio <span class="badge-new">Muito mais rico</span></div>
-        <div class="card-sub">Uniasselvi tem objeto dedicado · Unicesumar só tem campos em Disciplina</div>
-      </div>
-    </div>
-    <div class="fields">
-      <div class="field key">IDEstagioHoraRegistro__c · Matricula__c · CodigoDisciplina__c</div>
-      <div class="field"><b>Empresa:</b> Parceiro__c · CodigoConvenio__c · LocalEstagio__c · TelefoneConvenio__c · RepresentanteConvenio__c</div>
-      <div class="field"><b>Supervisor:</b> NomeSupervisorPreceptor__c · EmailSupervisorPreceptor__c · TipoAcompanhante__c</div>
-      <div class="field"><b>Tipo:</b> TipoEstagio__c (obrigatório / não obrigatório) · Semestre__c · Turno__c</div>
-      <div class="field"><b>Vigência:</b> InicioVigencia__c · FimVigencia__c · DiasEstagio__c</div>
-      <div class="field"><b>Carga horária:</b> CargaHorariaTotalExigida__c · CargaHorariaCumprida__c · CargaHorariaAguardandoVal__c · SomaCHCumpridaAguardando__c · PercentualConcluido__c</div>
-      <div class="field"><b>Avaliação:</b> MediaQuestionario__c · IDQuestionario__c · OrigemRespostaQuestionario__c · DataHoraQuestionario__c</div>
-      <div class="field"><b>Abono:</b> AbonoCargaHoraria__c · MotivoAbono__c · IDAbono__c · TemEvidencia__c · TemFichaFrequenciaAnexada__c</div>
-      <div class="field warn">⚠️ LGPD: CPFSupervisorPreceptor__c e NascimentoSupervisorPreceptor__c exigem controle de acesso.</div>
-    </div>
-  </div>
+</main>
 
-  <div class="card c-purple span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--purple-bg)">💰</div>
-      <div>
-        <div class="card-title">Financeiro (Títulos)</div>
-        <div class="card-sub">Criado a partir do CSV · Liga à Matrícula via Matrícula__c</div>
-      </div>
-    </div>
-    <div class="fields">
-      <div class="field key">NossoNumero__c (chave upsert) · Matricula__c</div>
-      <div class="field"><b>Tipo:</b> TipoTitulo__c (mensalidade/renegociação/taxa) · Semestre__c · Modalidade__c</div>
-      <div class="field"><b>Parcelas:</b> ParcelaSemestre__c · ParcelaGeral__c</div>
-      <div class="field"><b>Status:</b> StatusTitulo__c (em aberto/pago/vencido/cancelado)</div>
-      <div class="field"><b>Datas:</b> DataVencimento__c · DataPagamento__c · DataAtualizacao__c · DataFalha__c</div>
-      <div class="field"><b>Pagamento:</b> ValorPago__c · TipoPagamento__c (boleto/cartão/PIX)</div>
-      <div class="field"><b>Recorrência:</b> Recorrencia__c · StatusCartaoRecorrencia__c · NumeroTentativas__c · MotivoFalha__c</div>
-      <div class="field"><b>Transação:</b> TransacaoNegociacao__c · TransacaoOrigem__c · Exclusao__c · CrtiTerceiro__c</div>
-      <div class="field note">💡 Equivale ao objeto "Bolsas/Financeiro" pendente da Unicesumar — este está bem estruturado.</div>
-    </div>
-  </div>
-
-  <!-- CAMADA 5: OBJETOS DE CONTROLE -->
-  <div class="section-label"><h2>🟡 Camada 5 — Objetos de Controle e Contexto</h2></div>
-
-  <div class="card c-gold span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--gold-bg)">🔄</div>
-      <div>
-        <div class="card-title">Rematrícula <span class="badge-new">Novo objeto sugerido</span></div>
-        <div class="card-sub">Campos espalhados em Matrícula — merecem objeto próprio</div>
-      </div>
-    </div>
-    <div class="fields">
-      <div class="field key">Matrícula__c (referência) · Edital__c (semestre)</div>
-      <div class="field new">Data_Aceite_Acao_Rematricula__c · DataRespostaRematriculaAntecipada__c</div>
-      <div class="field new">DataInicioRA__c · DataFimRA__c (janela da rematrícula)</div>
-      <div class="field new">RespostaRematriculaAntecipada__c · RespostaRematriculaAntecipadaSim/Nao__c</div>
-      <div class="field new">RespostaRematAntecipadaDecidirdepois__c · RespostaAnteriorDaRematricula__c</div>
-      <div class="field new">ReversaoRespostaRematricula__c · Tipo_Rematricula__c · StatusRenovado__c · StatusRenovacao__c</div>
-      <div class="field new">Parametrizacao__c · NaoRenovados__c</div>
-      <div class="field note">💡 Hoje esses campos ficam em Matrícula. Centralizá-los em um objeto Rematrícula facilita réguas, relatórios e a unificação com Unicesumar.</div>
-    </div>
-  </div>
-
-  <div class="card c-gray span2">
-    <div class="card-header">
-      <div class="icon" style="background:var(--gray-bg)">📍</div>
-      <div>
-        <div class="card-title">Polo</div>
-        <div class="card-sub">Referenciado por Matrícula, Turma, Aulas Práticas e Estágio</div>
-      </div>
-    </div>
-    <div class="fields">
-      <div class="field key">CodigoDoPolo__c / Polo__c (chave de ligação)</div>
-      <div class="field">Referenciado em: Matrícula · Turma · Aulas Práticas · Estágio · Provas</div>
-      <div class="field note">💡 Equivale ao objeto Polo da Unicesumar. Campos detalhados (Nome, UF, Status, País) devem vir do objeto Polo de referência — aqui é só lookup.</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- NOTAS FINAIS -->
-<div class="notes">
-  <div class="note info">
-    <strong>🔑 Hierarquia de relacionamento:</strong><br>
-    <strong>Matrícula</strong> → Edital (semestre) · Turma (agrupamento) · Polo (local)<br>
-    <strong>Matrícula</strong> → Disciplina (grade) → Provas · Aulas Práticas · Presença · Estágio<br>
-    <strong>Matrícula</strong> → Financeiro (títulos) · Rematrícula (ciclo) · Documentação (pendências)
-  </div>
-  <div class="note new">
-    <strong>✨ 3 objetos novos identificados (não existem na Unicesumar):</strong><br>
-    1. <strong>Presença</strong> — controle de check-in/check-out em encontros presenciais<br>
-    2. <strong>Aulas Práticas</strong> — agendamento de laboratório vinculado à disciplina<br>
-    3. <strong>Rematrícula</strong> (sugestão) — consolidar os ~15 campos de ciclo de rematrícula hoje espalhados na Matrícula
-  </div>
-  <div class="note warn">
-    <strong>⚠️ Campos mal alocados no arquivo original:</strong><br>
-    • <strong>Setor__c e MacroMotivo__c</strong> estavam em Matrícula, mas pertencem ao objeto <strong>Atendimento/Protocolo</strong> (você mesmo indicou "vincular ao objeto protocolo")<br>
-    • <strong>DocumentosPendentes__c</strong> estava em Matrícula, mas é dado de <strong>Documentação</strong><br>
-    • <strong>Campos de Estágio</strong> em Disciplina (Data_inicio/fim_estagio, Situacao) são ponteiros — o objeto completo é o <strong>Estágio dedicado</strong><br>
-    • <strong>LGPD:</strong> CPF e Data Nascimento do Supervisor no Estágio exigem definição de perfil de acesso antes da unificação
-  </div>
-</div>
-
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
